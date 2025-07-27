@@ -17,22 +17,19 @@ public class UserDetailsServiceImp implements UserDetailsService {
     
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        // Handle the case where repository returns User directly (not Optional<User>)
         com.example.springJournal.entity.User user = userRepo.findByUsername(username);
         
         if (user == null) {
             throw new UsernameNotFoundException("username not found : " + username);
         }
         
-        // Handle null roles safely
         String[] roles = user.getRoles() != null ? 
             user.getRoles().toArray(new String[0]) : 
             new String[]{"USER"};
         
-        // Use the correct method name: .roles() not .userRoles()
         return User.withUsername(user.getUsername())
             .password(user.getPassword())
-            .roles(roles)  // Use the roles array we created above
+            .roles(roles)  
             .build();
     }
 }

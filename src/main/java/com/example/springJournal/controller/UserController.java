@@ -47,7 +47,6 @@ public ResponseEntity<?> updateUser(@RequestBody User user) {
 
     userInDb.setUsername(user.getUsername());
 
-    // ✅ Encrypt the password using BCrypt
     String encodedPassword = passwordEncoder.encode(user.getPassword());
     userInDb.setPassword(encodedPassword);
 

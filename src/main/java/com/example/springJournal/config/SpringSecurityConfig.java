@@ -25,17 +25,11 @@ public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Excepti
     http
       .csrf(csrf -> csrf.disable())       // JSON APIs in Postman, no CSRF tokens
       .authorizeHttpRequests(auth -> auth
-
-          // 1) Allow anonymous registration
           .requestMatchers(HttpMethod.POST, "/user").permitAll()
-
-          // 2) Still allow journal‑public pages
+        .requestMatchers(HttpMethod.POST, "/admin/create-admin").permitAll()
           .requestMatchers("/journal/**", "/public/**").permitAll()
-
-          // 3) Everything else under /user (GET, PUT, DELETE) requires auth
           .requestMatchers("/user/**").authenticated()
-
-          // 4) All other endpoints also need auth
+          .requestMatchers("/admin/**").hasRole("ADMIN")
           .anyRequest().authenticated()
       )
 
