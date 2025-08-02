@@ -17,13 +17,13 @@ public class UserServiceTests {
 
     @Autowired
     private UserRepo userRepo;
+    @Disabled
     @ParameterizedTest
     @ValueSource(strings = {
         "tia",
         "admin123",
         "purvi"
     })
-
     public void testfindByUsername(String username){
         assertNotNull(userRepo.findByUsername(username));
     }

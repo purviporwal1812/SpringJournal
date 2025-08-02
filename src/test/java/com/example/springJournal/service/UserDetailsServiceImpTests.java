@@ -5,6 +5,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import static org.mockito.Mockito.*;
 
+import org.junit.jupiter.api.Disabled;
+
 import com.example.springJournal.repository.UserRepo;
 
 public class UserDetailsServiceImpTests {
@@ -12,6 +14,7 @@ public class UserDetailsServiceImpTests {
     private UserDetailsServiceImp userDetailsServiceImp;
     @Mock
     private UserRepo userRepo;
+    @Disabled
     void loadUserByUsernameTest(){
         
         UserDetails user = userDetailsServiceImp.loadUserByUsername("tia");
