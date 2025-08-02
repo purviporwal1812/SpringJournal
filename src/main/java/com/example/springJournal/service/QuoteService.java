@@ -3,11 +3,11 @@ package com.example.springJournal.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import com.example.springJournal.apiResponse.QuoteResponse;
-@Component
+@Service
 public class QuoteService {
     private static final String API = "https://stoic.tekloon.net/stoic-quote";
 
