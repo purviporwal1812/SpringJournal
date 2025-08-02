@@ -14,9 +14,13 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.example.springJournal.apiResponse.QuoteResponse;
 import com.example.springJournal.entity.User;
 import com.example.springJournal.repository.UserRepo;
+import com.example.springJournal.service.QuoteService;
 import com.example.springJournal.service.UserService;
+import com.example.springJournal.service.WeatherService;
 
 
 @RestController
@@ -26,6 +30,10 @@ public class UserController {
     private UserService userService;
     @Autowired
     private UserRepo userRepo;
+    @Autowired
+    private WeatherService weatherService;
+    @Autowired
+    private QuoteService quoteService;
     @Autowired
     private PasswordEncoder passwordEncoder;
 
@@ -61,6 +69,29 @@ public ResponseEntity<?> updateUser(@RequestBody User user) {
         userRepo.deleteByUsername(authentication.getName());
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
+
+    @GetMapping("/weather")
+    public ResponseEntity<?> weather(){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        return new ResponseEntity<>("Ho"+authentication.getName()+", Weather feels like " + weatherService.getWeather("Mumbai").getCurrent().getFeelslike(),HttpStatus.OK);
+    }
+    @GetMapping("/greetings")
+public ResponseEntity<String> greeting() {
+    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+    QuoteResponse resp = quoteService.getQuote();
+
+    String quoteText  = resp.getData().getQuote();
+    String authorName = resp.getData().getAuthor();
+
+    String body = String.format(
+        "Hi %s, quote of the day is:\n\n\"%s\"\n— %s",
+        auth.getName(),
+        quoteText,
+        authorName
+    ); 
+
+    return ResponseEntity.ok(body);
+}
 
 
 }
