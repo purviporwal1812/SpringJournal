@@ -2,10 +2,21 @@ spring:
   profiles:
     active: dev
 
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: emailfortab47@gmail.com
+    password: rlua xhem iupd rine
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
 weather:
   api:
-    key: 3b9cd489ed06e3296b3cc80e0b5343e8
-
+    key: 3b9cd489ed06e3296kmkwmmkdmw
 
 logging:
   level:
