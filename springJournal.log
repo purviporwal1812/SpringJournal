@@ -4573,6 +4573,7 @@ Unconditional classes:
 2025-08-03 16:33:59 DEBUG org.springframework.boot.availability.ApplicationAvailabilityBean - Application availability state LivenessState changed to CORRECT
 2025-08-03 16:33:59 DEBUG org.springframework.boot.availability.ApplicationAvailabilityBean - Application availability state ReadinessState changed to ACCEPTING_TRAFFIC
 2025-08-03 16:34:06 DEBUG org.springframework.web.context.support.GenericWebApplicationContext - Closing org.springframework.web.context.support.GenericWebApplicationContext@76954a33, started on Sun Aug 03 16:33:53 IST 2025
+<<<<<<< HEAD
 2025-08-05 16:24:54 INFO  org.springframework.data.repository.config.RepositoryConfigurationDelegate - Bootstrapping Spring Data MongoDB repositories in DEFAULT mode.
 2025-08-05 16:24:54 INFO  org.springframework.data.repository.config.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 105 ms. Found 3 MongoDB repository interfaces.
 2025-08-05 16:24:56 INFO  org.springframework.boot.web.embedded.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
@@ -5911,3 +5912,5 @@ java.lang.NullPointerException: Cannot invoke "com.example.springJournal.apiResp
 2025-08-05 17:47:31 INFO  org.springframework.security.config.annotation.authentication.configuration.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer - Global AuthenticationManager configured with UserDetailsService bean with name userDetailsServiceImp
 2025-08-05 17:47:33 INFO  org.apache.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
 2025-08-05 17:47:33 INFO  org.springframework.boot.web.embedded.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path '/'
+=======
+>>>>>>> 1060c0d66d29b577251c7b96fafca1b1b33362b3
