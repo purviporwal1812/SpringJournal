@@ -1,6 +1,8 @@
 spring:
   profiles:
     active: dev
+  redis: 
+    url: redis-cli -u redis://default:8bjJ4YdZh12YvQOVcjlngGdRjf2LKg5n@redis-10363.c257.us-east-1-3.ec2.redns.redis-cloud.com:10363
 
   mail:
     host: smtp.gmail.com
@@ -14,12 +16,21 @@ spring:
           starttls:
             enable: true
 
+summarization:
+  api:
+    url: https://router.huggingface.co/hf-inference/models/facebook/bart-large-cnn
+    token: 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
+
+
 weather:
   api:
-    key: 3b9cd489ed06e3296kmkwmmkdmw
+    key: 3b9cd489ed06e3296b3cc80e0b5343e8
 
 logging:
   level:
     com:
       example:
         springJournal: ERROR
+scheduler:
+  weekly-cron: 0 0 9 * * MON    # every Monday at 9 AM
+  monthly-cron: 0 0 9 1 * *     # first day of month at 9 AM

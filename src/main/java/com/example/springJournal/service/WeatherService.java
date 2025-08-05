@@ -23,9 +23,17 @@ public class WeatherService {
 
     @Autowired
     private RestTemplate restTemplate;
+    @Autowired
+    private RedisService redisService;
 
     public WeatherResponse getWeather(String city) {
         try {
+            WeatherResponse weatherResponse = redisService.get("weather_of_" + city , WeatherResponse.class);
+            if(weatherResponse!=null){
+                return weatherResponse;
+            }else{
+
+            
             String template = appCache.appCache.get(AppCache.keys.WEATHER_API.toString());
             
             // Check if template exists
@@ -41,14 +49,15 @@ public class WeatherService {
             
             // Make the API call
             WeatherResponse response = restTemplate.getForObject(url, WeatherResponse.class);
-            
-            // Validate the response
+            if(response!=null){
+                redisService.set("w:" + city , response , 300l);
+            }
             if (response == null) {
                 throw new RuntimeException("Weather API returned null response");
             }
             
             return response;
-            
+        } 
         } catch (RestClientException e) {
             throw new RuntimeException("Failed to fetch weather data: " + e.getMessage(), e);
         } catch (Exception e) {
