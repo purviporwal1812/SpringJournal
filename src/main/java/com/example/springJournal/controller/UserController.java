@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.springJournal.apiResponse.QuoteResponse;
+import com.example.springJournal.apiResponse.WeatherResponse;
 import com.example.springJournal.entity.User;
 import com.example.springJournal.repository.UserRepo;
 import com.example.springJournal.service.QuoteService;
@@ -69,12 +70,44 @@ public ResponseEntity<?> updateUser(@RequestBody User user) {
         userRepo.deleteByUsername(authentication.getName());
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
-
-    @GetMapping("/weather")
-    public ResponseEntity<?> weather(){
+@GetMapping("/weather")
+public ResponseEntity<?> weather() {
+    try {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        return new ResponseEntity<>("Ho"+authentication.getName()+", Weather feels like " + weatherService.getWeather("Mumbai").getCurrent().getFeelslike(),HttpStatus.OK);
+        String username = authentication.getName();
+        
+        WeatherResponse weatherResponse = weatherService.getWeather("Mumbai");
+        
+        // Check if response and current data are not null
+        if (weatherResponse != null && weatherResponse.getCurrent() != null) {
+            Integer feelsLike = weatherResponse.getCurrent().getFeelslike();
+            String feelsLikeStr = (feelsLike != null) ? feelsLike.toString() + "°" : "unavailable";
+            
+            return new ResponseEntity<>(
+                "Hi " + username + ", Weather feels like " + feelsLikeStr, 
+                HttpStatus.OK
+            );
+        } else {
+            return new ResponseEntity<>(
+                "Hi " + username + ", Weather data is currently unavailable", 
+                HttpStatus.OK
+            );
+        }
+        
+    } catch (Exception e) {
+        // Log the error (add proper logging)
+        System.err.println("Error fetching weather: " + e.getMessage());
+        
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+        
+        return new ResponseEntity<>(
+            "Hi " + username + ", Sorry, weather service is currently unavailable", 
+            HttpStatus.OK
+        );
     }
+}
+
     @GetMapping("/greetings")
 public ResponseEntity<String> greeting() {
     Authentication auth = SecurityContextHolder.getContext().getAuthentication();
