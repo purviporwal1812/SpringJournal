@@ -10,6 +10,6 @@ import com.example.springJournal.entity.JournalEntry;
 
 public interface JournalEntryRepo extends MongoRepository<JournalEntry , ObjectId> {
     List<JournalEntry> findByIdInAndDateBetween(List<ObjectId> ids, LocalDateTime start, LocalDateTime end);
-
+List<JournalEntry> findByUsername(String username);
     
 }

@@ -30,7 +30,9 @@ public class JournalEntryService {
         User user = userService.findByUsername(username);
         journalEntry.setDate(LocalDateTime.now());
         JournalEntry saved = journalEntryRepo.save(journalEntry);
+        journalEntry.setUsername(username);
         user.getJournalEntries().add(saved);
+        
         userService.saveEntry(user);
         } catch(Exception e){
             logger.error("error occured" , e);
@@ -62,9 +64,10 @@ public class JournalEntryService {
             System.out.println(e);
             throw new RuntimeException("errror while deleteing" , e);
 
-        }
-       
-       
+        }  
+    }
+        public List<JournalEntry> findByUsername(String username) {
+        return journalEntryRepo.findByUsername(username);
     }
 
 }

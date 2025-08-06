@@ -5,6 +5,7 @@ import org.bson.types.ObjectId;
 import lombok.Data;
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import com.example.springJournal.enums.Sentiment;
@@ -23,5 +24,6 @@ public class JournalEntry {
     private String content;
     private LocalDateTime date;
     private Sentiment sentiment;
-   
+    @Indexed 
+    private String username; 
 }

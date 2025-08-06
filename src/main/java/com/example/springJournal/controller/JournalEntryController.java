@@ -35,16 +35,13 @@ public class JournalEntryController {
     @Autowired
     private UserService userService;
 
-    @GetMapping
-    public ResponseEntity<?> getAllJournalEntriesOfUser(){
+     @GetMapping
+    public ResponseEntity<List<JournalEntry>> getAllJournalEntriesOfUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-    String username = authentication.getName();
-        User user = userService.findByUsername(username);
-        List<JournalEntry> all =user.getJournalEntries();
-        if(all!=null && !all.isEmpty())return new ResponseEntity<>(all , HttpStatus.OK);
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        String username = authentication.getName();
+        List<JournalEntry> all = journalEntryService.findByUsername(username);
+        return new ResponseEntity<>(all, HttpStatus.OK);
     }
-
     @PostMapping
     public boolean createEntry(@RequestBody JournalEntry myEntry){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
