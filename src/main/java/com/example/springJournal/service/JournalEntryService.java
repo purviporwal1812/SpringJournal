@@ -29,8 +29,8 @@ public class JournalEntryService {
         try{
         User user = userService.findByUsername(username);
         journalEntry.setDate(LocalDateTime.now());
-        JournalEntry saved = journalEntryRepo.save(journalEntry);
         journalEntry.setUsername(username);
+        JournalEntry saved = journalEntryRepo.save(journalEntry);
         user.getJournalEntries().add(saved);
         
         userService.saveEntry(user);
