@@ -22,24 +22,31 @@ public class SpringSecurityConfig {
 
 @Bean
 public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-    http
-      .csrf(csrf -> csrf.disable())       // JSON APIs in Postman, no CSRF tokens
+http
+      .csrf(csrf -> csrf.disable())
+      .cors(Customizer.withDefaults())
+
+      
       .authorizeHttpRequests(auth -> auth
+          .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+          
           .requestMatchers(HttpMethod.POST, "/user").permitAll()
-        .requestMatchers(HttpMethod.POST, "/admin/create-admin").permitAll()
-          .requestMatchers("/journal/**", "/public/**").permitAll()
-          .requestMatchers("/user/**").authenticated()
+          .requestMatchers(HttpMethod.POST, "/admin/create-admin").permitAll()
+          .requestMatchers("/public/**").permitAll()
+          
+          .requestMatchers("/user/**","/journal/**").authenticated()
+          
+
           .requestMatchers("/admin/**").hasRole("ADMIN")
+          
           .anyRequest().authenticated()
       )
-
-      // Enable HTTP Basic for Postman (and/or keep formLogin for browsers)
+      
       .httpBasic(Customizer.withDefaults())
       .formLogin(Customizer.withDefaults());
 
     return http.build();
 }
-    // Required so Spring Security knows how to authenticate
     @Bean
     public AuthenticationManager authenticationManager(HttpSecurity http) throws Exception {
         AuthenticationManagerBuilder auth = 
