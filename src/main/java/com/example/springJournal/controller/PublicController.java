@@ -7,6 +7,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,6 +28,10 @@ public class PublicController {
     private UserService userService;
     @Autowired
     private JwtUtil jwtUtil;
+    @GetMapping
+    public String health(){
+        return "Hello";
+    }
     @PostMapping("/signup")
     public boolean signup(@RequestBody User user){
         userService.saveNewUser(user);
