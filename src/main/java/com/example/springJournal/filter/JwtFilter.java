@@ -1,6 +1,5 @@
 package com.example.springJournal.filter;
 
-
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -19,7 +18,7 @@ import com.example.springJournal.utils.JwtUtil;
 import java.io.IOException;
 
 @Component
-public class JwtFilter  extends OncePerRequestFilter{
+public class JwtFilter extends OncePerRequestFilter {
     @Autowired
     private UserDetailsService userDetailsService;
 
@@ -28,9 +27,17 @@ public class JwtFilter  extends OncePerRequestFilter{
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws ServletException, IOException {
+        // Handle OPTIONS requests for CORS
+        if ("OPTIONS".equals(request.getMethod())) {
+            response.setStatus(HttpServletResponse.SC_OK);
+            chain.doFilter(request, response); // ADD THIS LINE
+            return;
+        }
+
         String authorizationHeader = request.getHeader("Authorization");
         String username = null;
         String jwt = null;
+
         if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
             jwt = authorizationHeader.substring(7);
             username = jwtUtil.extractUsername(jwt);
