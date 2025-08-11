@@ -47,7 +47,7 @@ public class SpringSecurityConfig {
             "http://localhost:3000",
             "http://localhost:5173",
             "http://localhost:8080",
-            "https://your-frontend-domain.com"
+            "https://spring-journal-web-app.vercel.app"
         ));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
         configuration.setAllowedHeaders(Arrays.asList("*"));
