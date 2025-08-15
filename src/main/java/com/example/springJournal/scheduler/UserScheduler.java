@@ -35,18 +35,23 @@ public class UserScheduler {
     @Autowired
     private SummarizationService summarizationService;
 
-
-    @Scheduled(cron = "0 0 9 * * SUN")
+    @Scheduled(cron = "0 */10 * * * *")
     public void fetchUsersAndSendSAMail(){
        List<User> users = userRepoImpl.getUsersForSA();
+
         for (User user : users) {
             List<JournalEntry> journalEntries = user.getJournalEntries();
-            List<Sentiment> sentiments = journalEntries.stream().filter(x -> x.getDate().isAfter(LocalDateTime.now().minus(7, ChronoUnit.DAYS))).map(x -> x.getSentiment()).collect(Collectors.toList());
+            List<Sentiment> sentiments = journalEntries.stream()
+                .filter(x -> x.getDate().isAfter(LocalDateTime.now().minus(10, ChronoUnit.MINUTES)))
+                .map(x -> x.getSentiment())
+                .collect(Collectors.toList());
+            
             Map<Sentiment, Integer> sentimentCounts = new HashMap<>();
             for (Sentiment sentiment : sentiments) {
                 if (sentiment != null)
                     sentimentCounts.put(sentiment, sentimentCounts.getOrDefault(sentiment, 0) + 1);
             }
+            
             Sentiment mostFrequentSentiment = null;
             int maxCount = 0;
             for (Map.Entry<Sentiment, Integer> entry : sentimentCounts.entrySet()) {
@@ -55,48 +60,34 @@ public class UserScheduler {
                     mostFrequentSentiment = entry.getKey();
                 }
             }
-            if (mostFrequentSentiment != null) {
-                
-                    emailService.sendEmail(user.getEmail(), "Sentiment for previous week", mostFrequentSentiment.toString());
-                
+            
+            if (mostFrequentSentiment != null) {                                 
+                emailService.sendEmail(user.getEmail(), "Sentiment for previous 10 minutes", mostFrequentSentiment.toString());                         
             }
         }
     }
 
-
-    @Scheduled(cron = "0 0 9 * * SUN")
+    @Scheduled(cron = "0 */10 * * * *")
     public void clearAppCache(){
         appCache.init();
     }
 
-
-
-    public void weeklySummary() {
-        sendDigest(false);
-    }
-
-    @Scheduled(cron = "${scheduler.monthly-cron}")
-    public void monthlySummary() {
-        sendDigest(true);
-    }
-
-    private void sendDigest(boolean isMonthly) {
+    @Scheduled(cron = "0 */10 * * * *")
+    public void sendDigest() {
         LocalDateTime now = LocalDateTime.now();
-        LocalDateTime start = isMonthly
-            ? now.minusMonths(1)
-            : now.minusWeeks(1);
+        LocalDateTime start = now.minus(10, ChronoUnit.MINUTES);
 
         for (User user : userRepoImpl.getUsersForSA()) {
             List<ObjectId> ids = user.getJournalEntries()
                          .stream()
-                         .map(JournalEntry::getId).collect(Collectors.toList());
-                       
-
-List<JournalEntry> entries = journalEntryRepo.findByIdInAndDateBetween(ids, start, now);
+                         .map(JournalEntry::getId)
+                         .collect(Collectors.toList());
+                         
+            List<JournalEntry> entries = journalEntryRepo.findByIdInAndDateBetween(ids, start, now);
             if (entries.isEmpty()) continue;
 
             String summary = summarizationService.summarizeEntries(entries);
-            emailService.sendSummaryEmail(user.getEmail(), summary, isMonthly);
+            emailService.sendSummaryEmail(user.getEmail(), summary, false);
         }
     }
 }

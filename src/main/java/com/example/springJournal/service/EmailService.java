@@ -24,17 +24,13 @@ public class EmailService {
         } catch (Exception e) {
             System.out.println("error sending mail: " +e);
         }
-
     }
-       public void sendSummaryEmail(String to, String summary, boolean isMonthly) {
-        String subject = isMonthly ? "Your Monthly Journal Digest" : "Your Weekly Journal Digest";
-        String header  = isMonthly 
-            ? "Here’s what you reflected on this month…" 
-            : "Here’s what you talked about this week…";
+   
+    public void sendSummaryEmail(String to, String summary, boolean isMonthly) {
+        String subject = "Your Recent Journal Digest";
+        String header = "Here's what you reflected on in the last 10 minutes…";
 
-        String html = "<p>Hi! We’ve summarized your " 
-            + (isMonthly ? "last month’s" : "last week’s") 
-            + " entries:</p>"
+        String html = "<p>Hi! We've summarized your recent entries:</p>"
             + "<blockquote>" + summary + "</blockquote>"
             + "<p>Keep writing,</p><p>The SpringJournal Team</p>";
 
@@ -49,5 +45,4 @@ public class EmailService {
             System.out.println("error is:" + e);
         }
     }
-
 }
