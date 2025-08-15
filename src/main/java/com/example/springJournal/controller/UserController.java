@@ -41,7 +41,7 @@ public class UserController {
         return userService.getAll();
     }
 
-    @PutMapping
+@PutMapping
 public ResponseEntity<?> updateUser(@RequestBody User user) {
     Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
     String username = authentication.getName();
@@ -50,14 +50,22 @@ public ResponseEntity<?> updateUser(@RequestBody User user) {
     if (userInDb == null) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
     }
-
-    userInDb.setUsername(user.getUsername());
-
-    String encodedPassword = passwordEncoder.encode(user.getPassword());
-    userInDb.setPassword(encodedPassword);
+    if (user.getUsername() != null) {
+        userInDb.setUsername(user.getUsername());
+    }
+    
+    if (user.getPassword() != null) {
+        String encodedPassword = passwordEncoder.encode(user.getPassword());
+        userInDb.setPassword(encodedPassword);
+    }
+        if (user.getEmail() != null) {
+        userInDb.setEmail(user.getEmail());
+    }
+    
+    userInDb.setSentimentAnalysis(user.isSentimentAnalysis());
+    userInDb.setJournalSummarization(user.isJournalSummarization()); 
 
     userService.saveEntry(userInDb);
-
     return ResponseEntity.noContent().build();
 }
        
@@ -86,6 +94,18 @@ public ResponseEntity<String> greeting() {
     return ResponseEntity.ok(body);
 }
 
-
+@GetMapping("/me")
+public ResponseEntity<User> getCurrentUser() {
+    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+    
+    String username = auth.getName();
+    User user = userService.findByUsername(username);
+    
+    if (user == null) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+    }
+    
+    return ResponseEntity.ok(user);
+}
 
 }
